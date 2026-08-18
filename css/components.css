@@ -284,6 +284,12 @@
   margin-top: 8px;
 }
 
+.auth-email-preview {
+  white-space: pre-line;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
 /* דירוג בכוכבים */
 .star-rating {
   display: flex;

@@ -4,6 +4,7 @@
 /** @typedef {Object} LocalUser - רשומת חשבון מקומי (ב-"studytop:users", לא נתונים לימודיים)
  * @property {string} id
  * @property {string} username
+ * @property {string} email
  * @property {string} passwordHash - Base64, PBKDF2
  * @property {string} passwordSalt - Base64
  * @property {string} createdAt

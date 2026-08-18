@@ -1,20 +1,20 @@
-// זיהוי "מי מחובר עכשיו" - רק ב-sessionStorage (לא localStorage), ורק ה-id, לא הסיסמה.
-// נעלם כשסוגרים את הטאב/דפדפן; לא משותף בין משתמשים על אותו מכשיר.
+// זיהוי "מי מחובר עכשיו" - ב-localStorage, ורק ה-id, לא הסיסמה.
+// נשאר עד יציאה מפורשת, לא נעלם בסגירת טאב/דפדפן ("להישאר מחוברת").
 
-const SESSION_KEY = 'currentUserId';
+const SESSION_KEY = 'studytop:currentUserId';
 
 /** @returns {string|null} */
 export function getCurrentUserId() {
-  return window.sessionStorage.getItem(SESSION_KEY);
+  return window.localStorage.getItem(SESSION_KEY);
 }
 
 /** @param {string} userId */
 export function setCurrentUserId(userId) {
-  window.sessionStorage.setItem(SESSION_KEY, userId);
+  window.localStorage.setItem(SESSION_KEY, userId);
 }
 
 export function clearCurrentUserId() {
-  window.sessionStorage.removeItem(SESSION_KEY);
+  window.localStorage.removeItem(SESSION_KEY);
 }
 
 /** @returns {boolean} */
