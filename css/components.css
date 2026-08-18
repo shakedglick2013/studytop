@@ -290,6 +290,14 @@
   font-size: 14px;
 }
 
+.auth-reset-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 /* דירוג בכוכבים */
 .star-rating {
   display: flex;

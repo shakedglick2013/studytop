@@ -59,10 +59,7 @@ export async function verifyPassword(password, passwordHash, passwordSalt) {
   return computedHash === passwordHash;
 }
 
-const TEMP_PASSWORD_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789'; // בלי 0/O/1/I/l
-
-/** @returns {string} סיסמה זמנית אקראית בת 10 תווים (לשחזור סיסמה) */
-export function generateTemporaryPassword() {
-  const randomValues = crypto.getRandomValues(new Uint32Array(10));
-  return Array.from(randomValues, (v) => TEMP_PASSWORD_ALPHABET[v % TEMP_PASSWORD_ALPHABET.length]).join('');
+/** @returns {string} טוקן אקראי חד-פעמי לקישור שחזור סיסמה */
+export function generateResetToken() {
+  return crypto.randomUUID().replaceAll('-', '');
 }

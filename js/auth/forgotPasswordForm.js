@@ -1,24 +1,24 @@
-import { findUserByEmail, resetPasswordForUser } from './userAccounts.js';
+import { findUserByEmail, createPasswordResetToken } from './userAccounts.js';
 import { isValidEmail } from '../utils/validation.js';
-import { showAuthEmailModal, buildPasswordRecoveryEmailText } from './authEmailTemplates.js';
+import { showPasswordResetEmailModal } from './authEmailTemplates.js';
 
 export function forgotPasswordFormHTML() {
   return `
     <form id="forgot-password-form" novalidate>
-      <p class="page-subtitle">הזיני את כתובת האימייל שאיתה נרשמת, ונשלח לך סיסמה חדשה.</p>
+      <p class="page-subtitle">הזיני את כתובת האימייל שאיתה נרשמת, ונשלח אליה קישור לשחזור סיסמה.</p>
       <div class="field">
         <label for="forgot-password-email">אימייל</label>
         <input type="email" id="forgot-password-email" autocomplete="email">
         <p class="field-error" id="forgot-password-email-error"></p>
       </div>
       <div id="forgot-password-info-message"></div>
-      <button type="submit" id="forgot-password-submit-btn" class="btn btn-primary auth-submit-btn">שליחת סיסמה</button>
+      <button type="submit" id="forgot-password-submit-btn" class="btn btn-primary auth-submit-btn">שליחת קישור</button>
     </form>
   `;
 }
 
-/** @param {() => void} onDone - נקראת כשהמשתמשת חוזרת למסך ההתחברות (אחרי סגירת מודל ההצלחה, או ידנית) */
-export function wireForgotPasswordForm(onDone) {
+/** @param {(token:string) => void} onFollowResetLink - נקראת רק אם המשתמשת לוחצת על הקישור במודל ה"אימייל" */
+export function wireForgotPasswordForm(onFollowResetLink) {
   const form = document.getElementById('forgot-password-form');
   const emailEl = document.getElementById('forgot-password-email');
   const emailErrorEl = document.getElementById('forgot-password-email-error');
@@ -43,17 +43,13 @@ export function wireForgotPasswordForm(onDone) {
     submitBtn.disabled = true;
     const user = findUserByEmail(email);
     if (!user) {
-      infoEl.innerHTML = `<p class="auth-info-message">אם קיים חשבון עם כתובת האימייל הזו, נשלחה אליו סיסמה חדשה.</p>`;
+      infoEl.innerHTML = `<p class="auth-info-message">אם קיים חשבון עם כתובת האימייל הזו, נשלח אליו קישור לשחזור סיסמה.</p>`;
       submitBtn.disabled = false;
       return;
     }
 
-    const tempPassword = await resetPasswordForUser(user.id);
+    const token = createPasswordResetToken(user.id);
     submitBtn.disabled = false;
-    showAuthEmailModal({
-      title: 'הסיסמה אופסה',
-      bodyText: buildPasswordRecoveryEmailText({ username: user.username, password: tempPassword }),
-      onClose: onDone,
-    });
+    showPasswordResetEmailModal({ username: user.username, token, onFollowLink: onFollowResetLink });
   });
 }
